@@ -1,0 +1,57 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:test_contract_scan",
+  "version": 1,
+  "components": [
+    {
+      "bom-ref": "crypto-asset-4d63da",
+      "type": "cryptographic-asset",
+      "name": "SHA1",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "parameterSetIdentifier": "SHA-1",
+          "executionEnvironment": "software-plain-ram",
+          "implementationPlatform": "generic",
+          "cryptoFunctions": [
+            "digest"
+          ],
+          "classicalSecurityLevel": 80,
+          "nistQuantumSecurityLevel": 0
+        },
+        "oid": "1.3.14.3.2.26"
+      },
+      "occurrences": [
+        {
+          "location": "src/auth/token_signer.py",
+          "line": 42
+        }
+      ],
+      "ecdatEnrichment": {
+        "quantumVulnerable": true,
+        "vulnerabilityReason": "classically broken (collision attacks); also loses Grover margin",
+        "businessCriticality": "High",
+        "dataClassification": "Authentication-Token",
+        "exposure": "external-facing",
+        "estimatedShelfLifeYears": 2.0,
+        "estimatedMigrationEffortYears": 0.25,
+        "moscaX": 2.0,
+        "moscaY": 0.25,
+        "moscaZ": 8.0,
+        "moscaR": 0.28,
+        "moscaRiskTier": "Critical",
+        "recommendedReplacement": "SHA-384 or SHA3-384",
+        "referenceStandard": "N/A (deprecate; not a PQC concern, a classical-strength concern)",
+        "riskScore": 0.75,
+        "autoEscalated": true,
+        "escalationReason": "classically broken, independent of quantum timeline",
+        "recommendedMode": "pure",
+        "migrationComplexity": "Low",
+        "sizeDelta": "digest size 48 bytes (vs 16/20 bytes)",
+        "rationale": "Classically broken (collision attacks); migrate to SHA-384 or SHA3-384 to maintain >=192-bit classical and >=128-bit Grover margin."
+      }
+    }
+  ]
+}
