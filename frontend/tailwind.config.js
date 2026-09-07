@@ -1,0 +1,60 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        ink: '#12151B',
+        'ink-soft': '#4B5262',
+        'ink-faint': '#7B8394',
+        paper: '#F2F4F5',
+        surface: '#FFFFFF',
+        border: '#E1E5E8',
+        'border-strong': '#C7CDD3',
+        cipher: '#263A73',
+        'cipher-soft': '#E9ECF6',
+        qubit: '#0E9C90',
+        'qubit-soft': '#DEF3F0',
+        'risk-critical': '#B3261E',
+        'risk-critical-bg': '#FBEAE9',
+        'risk-high': '#B5590F',
+        'risk-high-bg': '#FBEEDF',
+        'risk-medium': '#93790E',
+        'risk-medium-bg': '#F8F1D8',
+        'risk-low': '#2E7D5B',
+        'risk-low-bg': '#E4F2EB',
+      },
+      fontFamily: {
+        sans: ["'IBM Plex Sans'", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+        mono: ["'IBM Plex Mono'", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+      },
+      spacing: {
+        '1': '4px',
+        '2': '8px',
+        '3': '12px',
+        '4': '16px',
+        '5': '24px',
+        '6': '32px',
+        '7': '48px',
+        '8': '64px',
+      },
+      borderRadius: {
+        sm: '4px',
+        md: '6px',
+      },
+      fontSize: {
+        display: ['40px', { lineHeight: '1.12', letterSpacing: '-0.01em', fontWeight: '600' }],
+        h1: ['26px', { lineHeight: '1.25', letterSpacing: '-0.01em', fontWeight: '600' }],
+        h2: ['19px', { lineHeight: '1.3', fontWeight: '600' }],
+        h3: ['15px', { lineHeight: '1.4', fontWeight: '600' }],
+        body: ['14px', { lineHeight: '1.6', fontWeight: '400' }],
+        small: ['12.5px', { lineHeight: '1.5', fontWeight: '400' }],
+        mono: ['13px', { lineHeight: '1.5', fontFamily: "'IBM Plex Mono', monospace" }],
+      },
+    },
+  },
+  plugins: [],
+};

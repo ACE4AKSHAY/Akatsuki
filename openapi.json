@@ -1,0 +1,1230 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ECDAT Backend API (Module M7)",
+    "description": "Enterprise Cryptographic Discovery & Analysis Tool (ECDAT) Backend API.\nCoordinates discovery scanning, Mosca quantum risk assessment, PQC recommendations, and CycloneDX 1.6 Cryptography Bill of Materials (CBOM) export.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/scans": {
+      "post": {
+        "tags": [
+          "Scans"
+        ],
+        "summary": "Create Scan",
+        "description": "Kicks off an asynchronous cryptographic discovery scan.\nReturns immediately with a scanId and 'queued' status.",
+        "operationId": "create_scan_scans_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScanCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScanResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Scans"
+        ],
+        "summary": "List Scans",
+        "description": "Lists recent scans.",
+        "operationId": "list_scans_scans_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScanResponse"
+                  },
+                  "title": "Response List Scans Scans Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scans/{scan_id}": {
+      "get": {
+        "tags": [
+          "Scans"
+        ],
+        "summary": "Get Scan",
+        "description": "Polls the status of an ongoing or completed scan.",
+        "operationId": "get_scan_scans__scan_id__get",
+        "parameters": [
+          {
+            "name": "scan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Scan Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScanResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assets": {
+      "get": {
+        "tags": [
+          "Assets"
+        ],
+        "summary": "List Assets",
+        "description": "Returns paginated assets matching filter criteria.\nIf 'z' query parameter is provided, recomputes Mosca r = (X+Y)/Z and risk tier dynamically!",
+        "operationId": "list_assets_assets_get",
+        "parameters": [
+          {
+            "name": "scanId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by scan job ID",
+              "title": "Scanid"
+            },
+            "description": "Filter by scan job ID"
+          },
+          {
+            "name": "riskTier",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by risk tier (Critical, High, Medium, Low)",
+              "title": "Risktier"
+            },
+            "description": "Filter by risk tier (Critical, High, Medium, Low)"
+          },
+          {
+            "name": "exposure",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by exposure (external-facing, internal-only)",
+              "title": "Exposure"
+            },
+            "description": "Filter by exposure (external-facing, internal-only)"
+          },
+          {
+            "name": "businessCriticality",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by business criticality",
+              "title": "Businesscriticality"
+            },
+            "description": "Filter by business criticality"
+          },
+          {
+            "name": "algorithm",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by algorithm name (e.g. SHA-1, RSA-2048)",
+              "title": "Algorithm"
+            },
+            "description": "Filter by algorithm name (e.g. SHA-1, RSA-2048)"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Page number",
+              "default": 1,
+              "title": "Page"
+            },
+            "description": "Page number"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "description": "Items per page",
+              "default": 50,
+              "title": "Pagesize"
+            },
+            "description": "Items per page"
+          },
+          {
+            "name": "z",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "maximum": 50.0,
+                  "minimum": 0.5
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Interactive threat-timeline Z slider override",
+              "title": "Z"
+            },
+            "description": "Interactive threat-timeline Z slider override"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetSummaryResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assets/{asset_id}": {
+      "get": {
+        "tags": [
+          "Assets"
+        ],
+        "summary": "Get Asset Detail",
+        "description": "Returns full asset details including exact file/line, complete Mosca breakdown,\nand side-by-side migration recommendation.",
+        "operationId": "get_asset_detail_assets__asset_id__get",
+        "parameters": [
+          {
+            "name": "asset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Asset Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetDetailResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cbom/{scan_id}": {
+      "get": {
+        "tags": [
+          "CBOM"
+        ],
+        "summary": "Download Cbom Json",
+        "description": "Returns the standardized CycloneDX 1.6 CBOM document for the specified scan ID.\nDelivered with Content-Disposition: attachment.",
+        "operationId": "download_cbom_json_cbom__scan_id__get",
+        "parameters": [
+          {
+            "name": "scan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Scan Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/{scan_id}": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "Export Scan Report",
+        "description": "Generates and downloads a report for the specified scan.",
+        "operationId": "export_scan_report_reports__scan_id__get",
+        "parameters": [
+          {
+            "name": "scan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Scan Id"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "pdf",
+                "csv",
+                "json"
+              ],
+              "type": "string",
+              "description": "Report format: pdf, csv, or json",
+              "default": "json",
+              "title": "Format"
+            },
+            "description": "Report format: pdf, csv, or json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/config/threat-model": {
+      "get": {
+        "tags": [
+          "Configuration"
+        ],
+        "summary": "Get Threat Model Config",
+        "description": "Returns the current threat model assumptions and risk weights.",
+        "operationId": "get_threat_model_config_config_threat_model_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Configuration"
+        ],
+        "summary": "Update Threat Model Config",
+        "description": "Updates the stored default threat-model config (Z timeline, risk weights).",
+        "operationId": "update_threat_model_config_config_threat_model_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ThreatModelUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Health Check",
+        "description": "Health check endpoint.",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AlgorithmProperties": {
+        "properties": {
+          "primitive": {
+            "type": "string",
+            "title": "Primitive"
+          },
+          "parameterSetIdentifier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parametersetidentifier"
+          },
+          "executionEnvironment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Executionenvironment",
+            "default": "software-plain-ram"
+          },
+          "implementationPlatform": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Implementationplatform",
+            "default": "generic"
+          },
+          "cryptoFunctions": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cryptofunctions"
+          },
+          "classicalSecurityLevel": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classicalsecuritylevel"
+          },
+          "nistQuantumSecurityLevel": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nistquantumsecuritylevel"
+          }
+        },
+        "type": "object",
+        "required": [
+          "primitive"
+        ],
+        "title": "AlgorithmProperties"
+      },
+      "AssetDetailResponse": {
+        "properties": {
+          "asset": {
+            "$ref": "#/components/schemas/CanonicalCBOMAsset"
+          },
+          "moscaBreakdown": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Moscabreakdown"
+          },
+          "recommendation": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Recommendation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "asset",
+          "moscaBreakdown",
+          "recommendation"
+        ],
+        "title": "AssetDetailResponse"
+      },
+      "AssetSummaryResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CanonicalCBOMAsset"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "pageSize": {
+            "type": "integer",
+            "title": "Pagesize"
+          },
+          "pages": {
+            "type": "integer",
+            "title": "Pages"
+          },
+          "zUsed": {
+            "type": "number",
+            "title": "Zused"
+          },
+          "criticalCount": {
+            "type": "integer",
+            "title": "Criticalcount"
+          },
+          "highCount": {
+            "type": "integer",
+            "title": "Highcount"
+          },
+          "mediumCount": {
+            "type": "integer",
+            "title": "Mediumcount"
+          },
+          "lowCount": {
+            "type": "integer",
+            "title": "Lowcount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "page",
+          "pageSize",
+          "pages",
+          "zUsed",
+          "criticalCount",
+          "highCount",
+          "mediumCount",
+          "lowCount"
+        ],
+        "title": "AssetSummaryResponse"
+      },
+      "CanonicalCBOMAsset": {
+        "properties": {
+          "bom-ref": {
+            "type": "string",
+            "title": "Bom-Ref"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "default": "cryptographic-asset"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "cryptoProperties": {
+            "$ref": "#/components/schemas/CryptoProperties"
+          },
+          "occurrences": {
+            "items": {
+              "$ref": "#/components/schemas/Occurrence"
+            },
+            "type": "array",
+            "title": "Occurrences"
+          },
+          "ecdatEnrichment": {
+            "$ref": "#/components/schemas/EcdatEnrichment"
+          }
+        },
+        "type": "object",
+        "required": [
+          "bom-ref",
+          "name",
+          "cryptoProperties",
+          "ecdatEnrichment"
+        ],
+        "title": "CanonicalCBOMAsset"
+      },
+      "CryptoProperties": {
+        "properties": {
+          "assetType": {
+            "type": "string",
+            "title": "Assettype",
+            "default": "algorithm"
+          },
+          "algorithmProperties": {
+            "$ref": "#/components/schemas/AlgorithmProperties"
+          },
+          "oid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Oid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "algorithmProperties"
+        ],
+        "title": "CryptoProperties"
+      },
+      "EcdatEnrichment": {
+        "properties": {
+          "quantumVulnerable": {
+            "type": "boolean",
+            "title": "Quantumvulnerable"
+          },
+          "vulnerabilityReason": {
+            "type": "string",
+            "title": "Vulnerabilityreason"
+          },
+          "businessCriticality": {
+            "type": "string",
+            "enum": [
+              "Critical",
+              "High",
+              "Medium",
+              "Low"
+            ],
+            "title": "Businesscriticality"
+          },
+          "dataClassification": {
+            "type": "string",
+            "title": "Dataclassification"
+          },
+          "exposure": {
+            "type": "string",
+            "title": "Exposure"
+          },
+          "estimatedShelfLifeYears": {
+            "type": "number",
+            "title": "Estimatedshelflifeyears"
+          },
+          "estimatedMigrationEffortYears": {
+            "type": "number",
+            "title": "Estimatedmigrationeffortyears"
+          },
+          "moscaX": {
+            "type": "number",
+            "title": "Moscax"
+          },
+          "moscaY": {
+            "type": "number",
+            "title": "Moscay"
+          },
+          "moscaZ": {
+            "type": "number",
+            "title": "Moscaz"
+          },
+          "moscaR": {
+            "type": "number",
+            "title": "Moscar"
+          },
+          "moscaRiskTier": {
+            "type": "string",
+            "enum": [
+              "Critical",
+              "High",
+              "Medium",
+              "Low"
+            ],
+            "title": "Moscarisktier"
+          },
+          "recommendedReplacement": {
+            "type": "string",
+            "title": "Recommendedreplacement"
+          },
+          "referenceStandard": {
+            "type": "string",
+            "title": "Referencestandard"
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "autoEscalated": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Autoescalated",
+            "default": false
+          },
+          "escalationReason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Escalationreason"
+          },
+          "recommendationMode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recommendationmode"
+          },
+          "migrationComplexity": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Migrationcomplexity"
+          },
+          "relativeSizeDelta": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Relativesizedelta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "quantumVulnerable",
+          "vulnerabilityReason",
+          "businessCriticality",
+          "dataClassification",
+          "exposure",
+          "estimatedShelfLifeYears",
+          "estimatedMigrationEffortYears",
+          "moscaX",
+          "moscaY",
+          "moscaZ",
+          "moscaR",
+          "moscaRiskTier",
+          "recommendedReplacement",
+          "referenceStandard"
+        ],
+        "title": "EcdatEnrichment"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Occurrence": {
+        "properties": {
+          "location": {
+            "type": "string",
+            "title": "Location"
+          },
+          "line": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Line"
+          }
+        },
+        "type": "object",
+        "required": [
+          "location"
+        ],
+        "title": "Occurrence"
+      },
+      "ScanCreate": {
+        "properties": {
+          "sourceType": {
+            "type": "string",
+            "enum": [
+              "git",
+              "upload",
+              "image",
+              "path"
+            ],
+            "title": "Sourcetype",
+            "description": "Scan input source type",
+            "default": "path"
+          },
+          "target": {
+            "type": "string",
+            "title": "Target",
+            "description": "Target repository URL, local path, container image reference, or uploaded file"
+          },
+          "complianceTarget": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "NIST-general",
+                  "CNSA2.0"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compliancetarget",
+            "default": "NIST-general"
+          },
+          "threatTimelineOverride": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Threattimelineoverride",
+            "description": "Optional custom Z (years until CRQC) override"
+          }
+        },
+        "type": "object",
+        "required": [
+          "target"
+        ],
+        "title": "ScanCreate"
+      },
+      "ScanResponse": {
+        "properties": {
+          "scanId": {
+            "type": "string",
+            "title": "Scanid"
+          },
+          "sourceType": {
+            "type": "string",
+            "title": "Sourcetype"
+          },
+          "target": {
+            "type": "string",
+            "title": "Target"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "progress": {
+            "type": "number",
+            "title": "Progress"
+          },
+          "assetCount": {
+            "type": "integer",
+            "title": "Assetcount"
+          },
+          "createdAt": {
+            "type": "string",
+            "title": "Createdat"
+          },
+          "completedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completedat"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scanId",
+          "sourceType",
+          "target",
+          "status",
+          "progress",
+          "assetCount",
+          "createdAt"
+        ],
+        "title": "ScanResponse"
+      },
+      "ThreatModelUpdateRequest": {
+        "properties": {
+          "threatTimelineYears": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 50.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Threattimelineyears",
+            "description": "Z: Years until CRQC"
+          },
+          "weightQuantum": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weightquantum"
+          },
+          "weightRatio": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weightratio"
+          },
+          "weightBusiness": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weightbusiness"
+          },
+          "weightExposure": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weightexposure"
+          },
+          "shelfLifeDefaults": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shelflifedefaults"
+          },
+          "migrationEffortDefaults": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Migrationeffortdefaults"
+          }
+        },
+        "type": "object",
+        "title": "ThreatModelUpdateRequest"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
