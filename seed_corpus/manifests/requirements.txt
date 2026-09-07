@@ -1,0 +1,4 @@
+# EXPECTED_FINDINGS: [{"library":"pyca/cryptography","primitive":"pyca","category":"key-management","line":1},{"library":"PyCryptodome","primitive":"pycryptodome","category":"key-management","line":2}]
+pyca/cryptography==42.0.5
+PyCryptodome==3.20.0
+requests==2.31.0

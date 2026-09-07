@@ -1,0 +1,128 @@
+# ECDAT M1 — Tier-1 regex signal table.
+# Sourced from ECDAT_Design_and_Technical_Document.md §8 detection taxonomy.
+# Adding a new algorithm = add an entry here, NOT a code change.
+
+signals:
+  # --- Hashes ---
+  - id: SHA1
+    primitive: SHA1
+    primitiveCategory: hash
+    language: any
+    patterns:
+      - '\bSHA-?1\b'
+      - 'hashlib\.sha1\b'
+      - 'crypto/sha1\b'
+      - "MessageDigest\\.getInstance\\(['\"]SHA-?1['\"]\\)"
+      - "createHash\\(['\"]sha1['\"]\\)"
+    deprecated: true
+
+  - id: MD5
+    primitive: MD5
+    primitiveCategory: hash
+    language: any
+    patterns:
+      - '\bMD5\b'
+      - 'hashlib\.md5\b'
+      - 'crypto/md5\b'
+    deprecated: true
+
+  - id: SHA256
+    primitive: SHA256
+    primitiveCategory: hash
+    language: any
+    patterns:
+      - '\bSHA-?256\b'
+      - 'hashlib\.sha256\b'
+
+  - id: SHA384
+    primitive: SHA384
+    primitiveCategory: hash
+    language: any
+    patterns:
+      - '\bSHA-?384\b'
+      - 'hashlib\.sha384\b'
+
+  - id: SHA512
+    primitive: SHA512
+    primitiveCategory: hash
+    language: any
+    patterns:
+      - '\bSHA-?512\b'
+      - 'hashlib\.sha512\b'
+
+  # --- Asymmetric ---
+  - id: RSA-2048
+    primitive: RSA-2048
+    primitiveCategory: asymmetric-cipher
+    language: any
+    patterns:
+      - 'rsa\.generate_private_key\([^)]*key_size\s*=\s*2048'
+      - 'modulusLength\s*:\s*2048'
+      - '\bkey_size\s*=\s*2048\b'
+    keySizeBits: 2048
+
+  - id: RSA
+    primitive: RSA
+    primitiveCategory: asymmetric-cipher
+    language: any
+    patterns:
+      - '\bcrypto/rsa\b'
+      - "generateKeyPairSync\\(['\"]rsa['\"]"
+      - 'rsa\.generate_private_key\b'
+      - '\bRSA_new\b'
+      - "Signature\\.getInstance\\(['\"]SHA\\d+withRSA['\"]\\)"
+
+  - id: ECDSA
+    primitive: ECDSA
+    primitiveCategory: signature
+    language: any
+    patterns:
+      - '\bcrypto/ecdsa\b'
+      - 'ecdsa\.SigningKey\b'
+
+  # --- Symmetric ciphers ---
+  - id: AES
+    primitive: AES
+    primitiveCategory: symmetric-cipher
+    language: any
+    patterns:
+      - '\balgorithms\.AES\b'
+      - "createCipheriv\\(['\"]aes-(\\d+)-(cbc|ecb|ctr|gcm|cfb|ofb)['\"]"
+      - 'aes\.NewCipher\b'
+      - "crypto/aes"
+      - "Cipher\\.getInstance\\(['\"]AES/(\\w+)/(\\w+)['\"]\\)"
+      - '\bmodes\.ECB\b'
+      - '\bmodes\.CBC\b'
+      - '\bmodes\.GCM\b'
+    mode_from_match: true
+
+  - id: DES
+    primitive: DES
+    primitiveCategory: symmetric-cipher
+    language: any
+    patterns:
+      - '\bDES_set_key\b'
+      - "Cipher\\.getInstance\\(['\"]DES['\"]\\)"
+      - "createCipheriv\\(['\"]des['\"]"
+    deprecated: true
+    mode: DES
+
+  - id: RC4
+    primitive: RC4
+    primitiveCategory: symmetric-cipher
+    language: any
+    patterns:
+      - '\bRC4\b'
+      - "createCipheriv\\(['\"]rc4['\"]"
+    deprecated: true
+    mode: RC4
+
+  - id: TripleDES
+    primitive: 3DES
+    primitiveCategory: symmetric-cipher
+    language: any
+    patterns:
+      - "createCipheriv\\(['\"]des-ede['\"]"
+      - 'DESede'
+    deprecated: true
+    mode: 3DES
