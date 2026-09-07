@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* core neutrals */
+  --ink: #12151B;
+  --ink-soft: #4B5262;
+  --ink-faint: #7B8394;
+  --paper: #F2F4F5;
+  --surface: #FFFFFF;
+  --border: #E1E5E8;
+  --border-strong: #C7CDD3;
+
+  /* brand — classical vs. post-quantum */
+  --cipher: #263A73;
+  --cipher-soft: #E9ECF6;
+  --qubit: #0E9C90;
+  --qubit-soft: #DEF3F0;
+
+  /* risk semantics */
+  --risk-critical: #B3261E;
+  --risk-critical-bg: #FBEAE9;
+  --risk-high: #B5590F;
+  --risk-high-bg: #FBEEDF;
+  --risk-medium: #93790E;
+  --risk-medium-bg: #F8F1D8;
+  --risk-low: #2E7D5B;
+  --risk-low-bg: #E4F2EB;
+
+  /* type */
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* shape */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--qubit-soft);
+}
+
+:focus-visible {
+  outline: 2px solid var(--qubit);
+  outline-offset: 2px;
+}
+
+/* Custom styled Range Slider matching brand kit */
+input[type="range"].ecdat-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--qubit) 0%, var(--border-strong) 0%);
+  outline: none;
+}
+
+input[type="range"].ecdat-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--cipher);
+  cursor: pointer;
+  margin-top: -6px;
+}
+
+input[type="range"].ecdat-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--cipher);
+  cursor: pointer;
+}
+
+/* Heatmap Dot styles */
+.heatmap-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-50%, 50%);
+  transition: left 0.35s ease, background 0.2s ease;
+  cursor: pointer;
+}
+
+.heatmap-dot.is-escalated {
+  box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.18);
+}
