@@ -1,0 +1,9 @@
+# EXPECTED_FINDINGS: [{"primitive":"OpenSSL 1.0.2","category":"key-management","line":1,"mode":"deprecated"},{"primitive":"RSA_new","category":"asymmetric-cipher","line":2},{"primitive":"MD5_Init","category":"hash","line":5},{"primitive":"SHA1_Init","category":"hash","line":6},{"primitive":"DES_set_key","category":"symmetric-cipher","line":7,"mode":"DES"},{"primitive":"RC4","category":"symmetric-cipher","line":8,"mode":"RC4"}]
+OpenSSL 1.0.2k  26 Jan 2017
+RSA_new
+EVP_EncryptInit_ex
+EVP_DigestInit_ex
+MD5_Init
+SHA1_Init
+DES_set_key
+RC4
