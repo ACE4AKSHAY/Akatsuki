@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "libraries": [
+    {
+      "library": "pyca/cryptography",
+      "ecosystem": "pypi",
+      "match_names": ["cryptography", "pyca/cryptography", "pyca-cryptography"],
+      "algorithms": ["AES", "RSA", "ECDSA", "ECDH", "SHA-256", "SHA-384", "SHA-512"],
+      "deprecated_ranges": [],
+      "cve_refs": []
+    },
+    {
+      "library": "PyCryptodome",
+      "ecosystem": "pypi",
+      "match_names": ["pycryptodome", "pycryptodomex", "Crypto"],
+      "algorithms": ["AES", "RSA", "DES", "3DES", "RC4", "MD5", "SHA-1"],
+      "deprecated_ranges": ["<3.10"],
+      "cve_refs": ["CVE-2018-1000860"]
+    },
+    {
+      "library": "PyNaCl",
+      "ecosystem": "pypi",
+      "match_names": ["pynacl", "nacl"],
+      "algorithms": ["X25519", "Ed25519", "XSalsa20-Poly1305"],
+      "deprecated_ranges": [],
+      "cve_refs": []
+    },
+    {
+      "library": "Bouncy Castle",
+      "ecosystem": "maven",
+      "match_names": ["bcprov-jdk15on", "bcprov-jdk18on", "bcpkix-jdk18on"],
+      "algorithms": ["RSA", "ECDSA", "AES", "DES", "3DES", "RC4"],
+      "deprecated_ranges": ["<1.60"],
+      "cve_refs": ["CVE-2020-26939"]
+    },
+    {
+      "library": "node-forge",
+      "ecosystem": "npm",
+      "match_names": ["node-forge"],
+      "algorithms": ["RSA", "AES", "DES", "MD5", "SHA-1"],
+      "deprecated_ranges": ["<=1.0.0"],
+      "cve_refs": ["CVE-2022-24773", "CVE-2022-46485"]
+    },
+    {
+      "library": "jsonwebtoken",
+      "ecosystem": "npm",
+      "match_names": ["jsonwebtoken"],
+      "algorithms": ["HS256", "RS256"],
+      "deprecated_ranges": [],
+      "cve_refs": ["CVE-2022-23529", "CVE-2022-23539", "CVE-2022-23540", "CVE-2022-23541"]
+    },
+    {
+      "library": "libsodium-wrappers",
+      "ecosystem": "npm",
+      "match_names": ["libsodium-wrappers", "libsodium"],
+      "algorithms": ["X25519", "Ed25519", "XSalsa20-Poly1305"],
+      "deprecated_ranges": [],
+      "cve_refs": []
+    },
+    {
+      "library": "golang.org/x/crypto",
+      "ecosystem": "go",
+      "match_names": ["golang.org/x/crypto"],
+      "algorithms": ["ChaCha20-Poly1305", "BLAKE2b", "RSA", "ECDSA", "Ed25519"],
+      "deprecated_ranges": [],
+      "cve_refs": []
+    },
+    {
+      "library": "stdlib-crypto",
+      "ecosystem": "go",
+      "match_names": ["crypto/sha1", "crypto/sha256", "crypto/md5", "crypto/rsa", "crypto/aes", "crypto/des", "crypto/rc4", "crypto/ecdsa", "crypto/ed25519"],
+      "algorithms": ["SHA-1", "SHA-256", "MD5", "RSA", "AES", "DES", "RC4", "ECDSA", "Ed25519"],
+      "deprecated_ranges": [],
+      "cve_refs": []
+    },
+    {
+      "library": "harmless-requests",
+      "ecosystem": "pypi",
+      "match_names": ["requests", "urllib3"],
+      "algorithms": [],
+      "deprecated_ranges": [],
+      "cve_refs": []
+    },
+    {
+      "library": "harmless-lodash",
+      "ecosystem": "npm",
+      "match_names": ["lodash"],
+      "algorithms": [],
+      "deprecated_ranges": [],
+      "cve_refs": []
+    },
+    {
+      "library": "harmless-echo",
+      "ecosystem": "go",
+      "match_names": ["github.com/labstack/echo/v4"],
+      "algorithms": [],
+      "deprecated_ranges": [],
+      "cve_refs": []
+    },
+    {
+      "library": "harmless-guava",
+      "ecosystem": "maven",
+      "match_names": ["guava", "com.google.guava"],
+      "algorithms": [],
+      "deprecated_ranges": [],
+      "cve_refs": []
+    }
+  ]
+}

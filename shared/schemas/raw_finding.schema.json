@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ecdat.example/schemas/raw_finding.schema.json",
+  "title": "ECDAT RawFinding",
+  "description": "Mirrors CONTRACT.md §1 verbatim. Owned by Person B; do not modify without team-wide notification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sourceModule",
+    "scanTargetId",
+    "filePath",
+    "lineNumber",
+    "rawSignal",
+    "detectedPrimitive",
+    "primitiveCategory",
+    "confidence",
+    "detectionTier"
+  ],
+  "properties": {
+    "sourceModule": {
+      "type": "string",
+      "enum": [
+        "M1_source_scanner",
+        "M2_dep_binary_scanner",
+        "M3_container_config_scanner"
+      ]
+    },
+    "scanTargetId": { "type": "string" },
+    "filePath": { "type": "string" },
+    "lineNumber": { "type": "integer", "minimum": 1 },
+    "language": {
+      "type": ["string", "null"],
+      "enum": ["python", "java", "javascript", "typescript", "go", "go-mod", "manifest", null]
+    },
+    "library": { "type": ["string", "null"] },
+    "rawSignal": { "type": "string" },
+    "detectedPrimitive": { "type": "string" },
+    "primitiveCategory": {
+      "type": "string",
+      "enum": [
+        "hash",
+        "symmetric-cipher",
+        "asymmetric-cipher",
+        "signature",
+        "mac",
+        "kdf",
+        "protocol",
+        "cipher",
+        "certificate",
+        "key-management"
+      ]
+    },
+    "keySizeBits": { "type": ["integer", "null"], "minimum": 1 },
+    "mode": { "type": ["string", "null"] },
+    "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+    "detectionTier": {
+      "type": "string",
+      "enum": [
+        "regex",
+        "ast",
+        "manifest",
+        "symbol-scan",
+        "binary-string",
+        "dockerfile",
+        "config-parse",
+        "iac-parse",
+        "cert-parse"
+      ]
+    }
+  }
+}
